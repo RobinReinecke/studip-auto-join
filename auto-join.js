@@ -4,7 +4,7 @@
 // @version      1.0
 // @description  Automatically join a Stud.IP course at a specific time.
 // @author       Robinatus
-// @match        https://studip.tu-braunschweig.de/dispatch.php/course/*
+// @match        https://*/dispatch.php/course/*
 // @grant        none
 // @license      Beerware
 // ==/UserScript==
@@ -14,18 +14,18 @@
 
     // thanks to https://www.w3schools.com/js/js_cookies.asp
     function getCookie(cname) {
-        var name = cname + "=";
-        var decodedCookie = decodeURIComponent(document.cookie);
-        var ca = decodedCookie.split(';');
-        for(var i = 0; i <ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0) == ' ') {
+        const name = cname + "=";
+        const decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) === ' ') {
                 c = c.substring(1);
             }
-            if (c.indexOf(name) == 0) {
+            if (c.indexOf(name) === 0) {
                 return c.substring(name.length, c.length);
             }
-            }
+        }
         return "";
     }
 
@@ -79,7 +79,7 @@
             let nowMinutes = now.getMinutes();
             let remainingMinutes = reloadTime[1] - nowMinutes - 1;
             // invalid remainingMinutes
-            if (remainingHours == 0 && remainingMinutes < 0) return;
+            if (remainingHours === 0 && remainingMinutes < 0) return;
 
             // reload at defined time
             timeout = setTimeout(() => {
@@ -108,10 +108,9 @@
             reset();
         }
 
-        var xpath = "//a[text()='Zugang zur Veranstaltung']";
-        var matchingElement = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-        if (matchingElement)
-        {
+        const xpath = "//a[text()='Zugang zur Veranstaltung']";
+        const matchingElement = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+        if (matchingElement) {
             matchingElement.click();
         }
     }
