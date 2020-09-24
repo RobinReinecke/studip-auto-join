@@ -4,7 +4,7 @@
 // @version      1.0
 // @description  Automatically join a Stud.IP course at a specific time.
 // @author       Robinatus
-// @match        https://studip.tu-braunschweig.de/dispatch.php/course/*
+// @match        https://*/dispatch.php/course/*
 // @grant        none
 // @license      Beerware
 // ==/UserScript==
