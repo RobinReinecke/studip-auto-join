@@ -12,24 +12,7 @@
 (function() {
     'use strict';
 
-    // thanks to https://www.w3schools.com/js/js_cookies.asp
-    function getCookie(cname) {
-        const name = cname + "=";
-        const decodedCookie = decodeURIComponent(document.cookie);
-        let ca = decodedCookie.split(';');
-        for (let i = 0; i < ca.length; i++) {
-            let c = ca[i];
-            while (c.charAt(0) === ' ') {
-                c = c.substring(1);
-            }
-            if (c.indexOf(name) === 0) {
-                return c.substring(name.length, c.length);
-            }
-        }
-        return "";
-    }
-
-    let isRunning = getCookie("auto-join");
+    let refreshTime = localStorage.getItem("auto-join");
 
     // UI Elements
     let input;
@@ -40,29 +23,31 @@
         label.textContent = "Not Running";
         start.textContent = "Start";
         start.removeAttribute("timeout");
-        document.cookie = "auto-join=; expires=Thu, 01 Jan 1970 00:00:00 UTC;"
+        localStorage.removeItem("auto-join");
     }
 
     // create minimalistic UI
     function createUI() {
         let div = document.createElement("div");
-        div.style.position = "absolute";
+        div.style.position = "fixed";
         div.style.right = "0";
         div.style.bottom = "0";
+        div.style.backgroundC
 
         input = document.createElement("input");
         input.type = "time";
-        input.value = isRunning;
+        input.value = refreshTime;
 
         label = document.createElement("label");
-        label.textContent = isRunning ? "Running" : "Not Running";
+        label.textContent = refreshTime ? "Running" : "Not Running";
 
         start = document.createElement("button");
 
         start.onclick = () => {
-            let timeout = start.getAttribute("timeout");
-            if (getCookie("auto-join")) {
-                clearTimeout(timeout);
+            if (localStorage.getItem("auto-join")) {
+                // "Stop"
+                let oldTimeout = start.getAttribute("timeout");
+                clearTimeout(oldTimeout);
                 reset();
                 return;
             }
@@ -82,17 +67,16 @@
             if (remainingHours === 0 && remainingMinutes < 0) return;
 
             // reload at defined time
-            timeout = setTimeout(() => {
+            let timeout = setTimeout(() => {
                 location.reload();
             }, (remainingHours * 3600 + remainingMinutes * 60 + (60 - now.getSeconds())) * 1000 )
 
             start.setAttribute("timeout", timeout);
-            start.setAttribute("time", reloadTime);
             label.textContent = "running";
-            document.cookie = "auto-join=" + input.value;
+            localStorage.setItem("auto-join", input.value);
             start.textContent = "Stop";
         }
-        start.textContent = isRunning ? "Stop" : "Start";
+        start.textContent = refreshTime ? "Stop" : "Start";
 
         div.append(input);
         div.append(label);
@@ -101,18 +85,22 @@
         document.body.append(div);
     }
 
-    if (isRunning) {
+    // should only be triggered after the automatic refresh
+    if (refreshTime) {
+        const xpath = "//a[text()='Zugang zur Veranstaltung']";
+        const matchingElement = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+
+        if (!matchingElement) return;
+
+        matchingElement.click();
+
         if ((document.documentElement.textContent || document.documentElement.innerText).indexOf('Bitte bestätigen Sie die Aktion') > -1) {
             let button = document.getElementsByClassName("accept")[0];
             button.click();
             reset();
         }
 
-        const xpath = "//a[text()='Zugang zur Veranstaltung']";
-        const matchingElement = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-        if (matchingElement) {
-            matchingElement.click();
-        }
+        reset();
     }
 
     createUI();
