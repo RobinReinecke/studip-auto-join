@@ -32,7 +32,6 @@
         div.style.position = "fixed";
         div.style.right = "0";
         div.style.bottom = "0";
-        div.style.backgroundC
 
         input = document.createElement("input");
         input.type = "time";

@@ -5,7 +5,7 @@
 A small userscript to auto join a Stud.IP course which has a time restriced join to avoid frustration.
 
 ## Installation
-Just install Tampermonkey and install the script by a click on the following link: [https://github.com/Robinatus/studip-auto-join/releases/download/v1.1/auto-join.user.js](https://github.com/Robinatus/studip-auto-join/releases/download/v1.1/auto-join.user.js)
+Just install Tampermonkey and install the script by a click on the following link: [https://github.com/Robinatus/studip-auto-join/releases/download/v1.2/auto-join.user.js](https://github.com/Robinatus/studip-auto-join/releases/download/v1.2/auto-join.user.js)
 
 Note: Currently needs german Stud.IP to work.
 
